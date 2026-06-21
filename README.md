@@ -8,6 +8,9 @@
 ## Требования
 - Python 3.6 или выше (используются f-строки и аннотации типов не обязательны).
 
+## Python Code
+[Ссылка на Python](Code{https://github.com/VladKoretski/ha_OOP/blob/main/students_mentors.py)
+
 ## Установка и запуск
 1. Склонируйте репозиторий:
    ```bash
@@ -52,29 +55,92 @@
 ## Пример использования
 
 ```python
-# Создаём объекты
-student = Student('Алёхина', 'Ольга', 'Ж')
-lecturer = Lecturer('Иван', 'Иванов')
-reviewer = Reviewer('Пётр', 'Петров')
+# ---------- Создание экземпляров и тесты (задание №4) ----------
+# Студенты
+student1 = Student('Алёхина', 'Ольга', 'Ж')
+student2 = Student('Иванов', 'Егор', 'М')
+student1.courses_in_progress += ['Python', 'Java']
+student1.finished_courses += ['C++']
+student2.courses_in_progress += ['Python', 'Java']
 
-# Прикрепляем курсы
-student.courses_in_progress += ['Python', 'Java']
-lecturer.courses_attached += ['Python', 'C++']
-reviewer.courses_attached += ['Python', 'C++']
+# Лекторы
+lecturer1 = Lecturer('Иван', 'Иванов')
+lecturer2 = Lecturer('Петр', 'Петровский')
+lecturer3 = Lecturer('Ганс', 'Клитке')
+for lec in (lecturer1, lecturer2, lecturer3):
+    lec.courses_attached += ['Python', 'C++', 'Java']
 
-# Проверяющий выставляет оценку за ДЗ
-reviewer.rate_hw(student, 'Python', 9)
+# Проверяющие
+reviewer1 = Reviewer('Пётр', 'Петров')
+reviewer2 = Reviewer('Анна', 'Смирнова')
+for rev in (reviewer1, reviewer2):
+    rev.courses_attached += ['Python', 'C++', 'Java']
 
-# Студент оценивает лектора
-student.rate_lecture(lecturer, 'Python', 8)
+# Выставление оценок за ДЗ (только проверяющие)
+reviewer1.rate_hw(student1, 'Python', 4)
+reviewer1.rate_hw(student1, 'Python', 5)
+reviewer1.rate_hw(student1, 'Java', 3)
+
+reviewer2.rate_hw(student2, 'Python', 5)
+reviewer2.rate_hw(student2, 'Python', 5)
+reviewer2.rate_hw(student2, 'Java', 3)
+
+# Оценки лекторам от студентов
+print(student1.rate_lecture(lecturer1, 'Python', 7))   # None
+print(student1.rate_lecture(lecturer1, 'Java', 8))     # Ошибка (студент не изучает Java)
+print(student1.rate_lecture(lecturer1, 'С++', 8))      # Ошибка (нет такого курса)
+
+student1.rate_lecture(lecturer1, 'Python', 4)
+student1.rate_lecture(lecturer2, 'Python', 7)
+student1.rate_lecture(lecturer2, 'Python', 9)
+student2.rate_lecture(lecturer3, 'Python', 7)
+student2.rate_lecture(lecturer3, 'Python', 4)
 
 # Вывод информации
-print(lecturer)   # Имя, фамилия, средняя оценка за лекции
-print(student)    # Имя, фамилия, средняя оценка за ДЗ, курсы
+print('\n')
+print(reviewer1, '\n')
+print(lecturer1, '\n')
+print(student1, '\n')
 
-# Сравнение лекторов по средней оценке
-lecturer2 = Lecturer('Петр', 'Петров')
-print(lecturer > lecturer2)   # True/False
+# Сравнения
+print(lecturer1 > lecturer2)          # False (4+7 vs 7+9)
+print(lecturer2 == lecturer3)         # False (8 vs 5.5)
+print(student1 < student2)            # True (4.0 vs 4.33)
+print(student1 == student2)           # False
+
+# Проверка функций подсчёта средних
+students_list = [student1, student2]
+lecturers_list = [lecturer1, lecturer2, lecturer3]
+print('\nСредняя оценка студентов по Python:', avg_student_grade(students_list, 'Python'))
+print('Средняя оценка лекторов по Python:', avg_lecturer_grade(lecturers_list, 'Python'))
+```
+Результаты вывод:
+```bash
+None
+None
+Ошибка
+
+
+Имя: Пётр
+Фамилия: Петров 
+
+Имя: Иван
+Фамилия: Иванов
+Средняя оценка за лекции: 6.333333333333333 
+
+Имя: Алёхина
+Фамилия: Ольга
+Средняя оценка за домашние задания: 4.0
+Курсы в процессе изучения: Python, Java
+Завершенные курсы: C++ 
+
+False
+False
+True
+False
+
+Средняя оценка студентов по Python: 4.75
+Средняя оценка лекторов по Python: 6.333333333333333
 ```
 ---
 
