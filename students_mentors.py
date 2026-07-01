@@ -120,13 +120,16 @@ class Reviewer(Mentor):
         Выставляет оценку студенту за курс (только если проверяющий
         прикреплён к этому курсу и студент его изучает).
         """
-        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
-            if course in student.grades:
-                student.grades[course] += [grade]
+        if grade < 1 or grade > 10:
+                return 'Ошибка: оценка не соответствует 10-балльной системе'
+        else:        
+            if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+                if course in student.grades:
+                    student.grades[course] += [grade]
+                else:
+                    student.grades[course] = [grade]
             else:
-                student.grades[course] = [grade]
-        else:
-            return 'Ошибка'
+                return 'Ошибка - это не студент или курса нет'
 
     def __str__(self):
         return f'Имя: {self.name}\nФамилия: {self.surname}'
